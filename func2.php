@@ -1,72 +1,81 @@
 <?php
 session_start();
-$con=mysqli_connect("localhost","root","","myhmsdb");
+
+// Your MySQL URI
+$db_url = "mysql://avnadmin:AVNS_BVdPE77xx-31RLotFyo@mysql-3a7078b7-heathcare.g.aivencloud.com:16548/defaultdb?ssl-mode=REQUIRED";
+
+// Parse the URI
+$dbparts = parse_url($db_url);
+
+// Extract the parts
+$hostname = $dbparts['host'];
+$username = $dbparts['user'];
+$password = $dbparts['pass'];
+$database = ltrim($dbparts['path'],'/');
+
+// Establish the connection
+$con = mysqli_connect($hostname, $username, $password, $database);
+
+// Check connection
+if (!$con) {
+    die("Connection failed: " . mysqli_connect_error());
+}
+
 if(isset($_POST['patsub1'])){
-	$fname=$_POST['fname'];
-  $lname=$_POST['lname'];
-  $gender=$_POST['gender'];
-  $email=$_POST['email'];
-  $contact=$_POST['contact'];
-	$password=$_POST['password'];
-  $cpassword=$_POST['cpassword'];
-  if($password==$cpassword){
-  	$query="insert into patreg(fname,lname,gender,email,contact,password,cpassword) values ('$fname','$lname','$gender','$email','$contact','$password','$cpassword');";
-    $result=mysqli_query($con,$query);
-    if($result){
-        $_SESSION['username'] = $_POST['fname']." ".$_POST['lname'];
-        $_SESSION['fname'] = $_POST['fname'];
-        $_SESSION['lname'] = $_POST['lname'];
-        $_SESSION['gender'] = $_POST['gender'];
-        $_SESSION['contact'] = $_POST['contact'];
-        $_SESSION['email'] = $_POST['email'];
-        header("Location:admin-panel.php");
-    } 
+    $fname = $_POST['fname'];
+    $lname = $_POST['lname'];
+    $gender = $_POST['gender'];
+    $email = $_POST['email'];
+    $contact = $_POST['contact'];
+    $password = $_POST['password'];
+    $cpassword = $_POST['cpassword'];
+    
+    if($password == $cpassword){
+        $query = "INSERT INTO patreg (fname, lname, gender, email, contact, password, cpassword) VALUES ('$fname', '$lname', '$gender', '$email', '$contact', '$password', '$cpassword')";
+        $result = mysqli_query($con, $query);
+        
+        if($result){
+            $_SESSION['username'] = $fname . " " . $lname;
+            $_SESSION['fname'] = $fname;
+            $_SESSION['lname'] = $lname;
+            $_SESSION['gender'] = $gender;
+            $_SESSION['contact'] = $contact;
+            $_SESSION['email'] = $email;
+            header("Location:admin-panel.php");
+        } 
 
-    $query1 = "select * from patreg;";
-    $result1 = mysqli_query($con,$query1);
-    if($result1){
-      $_SESSION['pid'] = $row['pid'];
+        $query1 = "SELECT * FROM patreg;";
+        $result1 = mysqli_query($con, $query1);
+        
+        if($result1){
+            $row = mysqli_fetch_assoc($result1);
+            $_SESSION['pid'] = $row['pid'];
+        }
+
+    } else {
+        header("Location:error1.php");
     }
-
-  }
-  else{
-    header("Location:error1.php");
-  }
-}
-if(isset($_POST['update_data']))
-{
-	$contact=$_POST['contact'];
-	$status=$_POST['status'];
-	$query="update appointmenttb set payment='$status' where contact='$contact';";
-	$result=mysqli_query($con,$query);
-	if($result)
-		header("Location:updated.php");
 }
 
-
-
-
-// function display_docs()
-// {
-// 	global $con;
-// 	$query="select * from doctb";
-// 	$result=mysqli_query($con,$query);
-// 	while($row=mysqli_fetch_array($result))
-// 	{
-// 		$name=$row['name'];
-// 		# echo'<option value="" disabled selected>Select Doctor</option>';
-// 		echo '<option value="'.$name.'">'.$name.'</option>';
-// 	}
-// }
-
-if(isset($_POST['doc_sub']))
-{
-	$name=$_POST['name'];
-	$query="insert into doctb(name)values('$name')";
-	$result=mysqli_query($con,$query);
-	if($result)
-		header("Location:adddoc.php");
+if(isset($_POST['update_data'])){
+    $contact = $_POST['contact'];
+    $status = $_POST['status'];
+    $query = "UPDATE appointmenttb SET payment='$status' WHERE contact='$contact';";
+    $result = mysqli_query($con, $query);
+    
+    if($result)
+        header("Location:updated.php");
 }
+
+if(isset($_POST['doc_sub'])){
+    $name = $_POST['name'];
+    $query = "INSERT INTO doctb (name) VALUES ('$name')";
+    $result = mysqli_query($con, $query);
+    
+    if($result)
+        header("Location:adddoc.php");
+}
+
 function display_admin_panel(){
 	echo '<!DOCTYPE html>
 <html lang="en">
