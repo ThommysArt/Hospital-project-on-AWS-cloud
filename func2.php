@@ -8,10 +8,10 @@ $db_url = "mysql://avnadmin:AVNS_BVdPE77xx-31RLotFyo@mysql-3a7078b7-heathcare.g.
 $dbparts = parse_url($db_url);
 
 // Extract the parts
-$hostname = $dbparts['host'];
-$username = $dbparts['user'];
-$password = $dbparts['pass'];
-$database = ltrim($dbparts['path'],'/');
+$hostname = "mysql-3a7078b7-heathcare.g.aivencloud.com:16548";
+$username = "avnadmin";
+$password = "AVNS_BVdPE77xx-31RLotFyo";
+$database = "defaultdb";
 
 // Establish the connection
 $con = mysqli_connect($hostname, $username, $password, $database);
