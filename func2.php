@@ -1,17 +1,11 @@
 <?php
 session_start();
 
-// Your MySQL URI
-$db_url = "mysql://avnadmin:AVNS_BVdPE77xx-31RLotFyo@mysql-3a7078b7-heathcare.g.aivencloud.com:16548/defaultdb?ssl-mode=REQUIRED";
-
-// Parse the URI
-$dbparts = parse_url($db_url);
-
 // Extract the parts
-$hostname = "mysql-3a7078b7-heathcare.g.aivencloud.com:16548";
-$username = "avnadmin";
-$password = "AVNS_BVdPE77xx-31RLotFyo";
-$database = "defaultdb";
+$hostname = "autorack.proxy.rlwy.net:33282";
+$username = "root";
+$password = "iWsHxoRjIFPSbGCCZWzJUBNBvYvRSfSJ";
+$database = "railway";
 
 // Establish the connection
 $con = mysqli_connect($hostname, $username, $password, $database);
